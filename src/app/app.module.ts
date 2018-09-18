@@ -6,6 +6,7 @@ import { createCustomElement } from '@angular/elements'
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from './app.service';
 import { BppComponent } from './bpp/bpp.component';
+import { SharedModule } from './shared.module';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { BppComponent } from './bpp/bpp.component';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule
   ],
   providers: [DataService
   ],

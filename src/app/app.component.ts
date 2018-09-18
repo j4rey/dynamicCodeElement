@@ -1,7 +1,7 @@
 import { DataService } from './app.service';
 import { Component, Input, OnInit, Compiler, ComponentFactory, TypeDecorator, NgModule, ModuleWithComponentFactories, ViewChild, ViewContainerRef, ComponentRef, ViewEncapsulation } from '@angular/core';
 //import { createComponent } from '../../node_modules/@angular/compiler/src/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from './shared.module';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +24,14 @@ export class AppComponent implements OnInit{
       console.log(json.template);
       
       this.createComponent(json.template, json.data);
+      //this.createComponent(json.template, json);
     })
   }
+
   createComponent(_template, _data): any {
     let metadata = {
       template: _template
+      //template: `<div [innerHTML]="template | sanitizeHtml"></div>`
     };
 
     let factory = this.createComponentFactorySync(metadata, null, _data);
@@ -41,9 +44,10 @@ export class AppComponent implements OnInit{
 
   createComponentFactorySync(metadata: Component, componentClass: any, inputdata: any): ComponentFactory<any> {
     const cmpClass = componentClass || class RuntimeComponent { name: string = "C1"; data: any = inputdata};
+    //const cmpClass = componentClass || class RuntimeComponent { name: string = "C1"; data: any = inputdata.data; template: any = inputdata.template};
     const typeD: TypeDecorator = Component(metadata);
     const decoratedCmp = typeD(cmpClass);
-    @NgModule({imports: [CommonModule], declarations: [decoratedCmp]})
+    @NgModule({imports: [SharedModule], declarations: [decoratedCmp]})
     class RuntimeComponentModule {}
     let module: ModuleWithComponentFactories<any> = this.compiler.compileModuleAndAllComponentsSync(RuntimeComponentModule);
     return module.componentFactories.find(f => f.componentType === decoratedCmp);
